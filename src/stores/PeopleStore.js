@@ -10,7 +10,7 @@ let PeopleStore = Reflux.createStore({
 			.then((response) => response.json())
 			.then((data) => {
 				let people = data.results;
-				self.trigger(people);
+				self.trigger(people[0]);
 			})
 			.catch((err) => {err});
 	}
