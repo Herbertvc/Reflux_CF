@@ -4,13 +4,16 @@ import PeopleActions from '../actions/PeopleActions';
 
 let PeopleStore = Reflux.createStore({
 	listenables: [PeopleActions],
-	fetchPeople: function(argument) {
+	fetchPeople: function() {
+		let self = this;
 		fetch('https://randomuser.me/api/')
 			.then((response) => response.json())
 			.then((data) => {
-				let people = people.result;
-				this.trigger(people);
+				let people = data.results;
+				self.trigger(people);
 			})
-			.catch((err) => {});
+			.catch((err) => {err});
 	}
 });
+
+export default PeopleStore;
