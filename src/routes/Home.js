@@ -14,14 +14,21 @@ export default class Home extends React.Component {
     super();
   }
 
-  componentDidMount(){
+  componentDidMount() {
     PeopleActions.fetchPeople();
+  }
+
+  handlePeople() {
+    PeopleActions.askForPeople();
   }
 
   render() {
     if(this.state.people != null){
       return (
-        <PeopleFrame people={this.state.people} />
+        <div>
+          <PeopleFrame people={this.state.people} />
+          <button onClick={this.handlePeople.bind(this)}>Ask!</button>
+        </div>
       )
     }
     else{

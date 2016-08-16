@@ -1,18 +1,20 @@
 import Reflux from 'reflux';
+import io from 'socket.io-client'
 
 import PeopleActions from '../actions/PeopleActions';
 
 let PeopleStore = Reflux.createStore({
 	listenables: [PeopleActions],
 	fetchPeople: function() {
-		let self = this;
-		fetch('https://randomuser.me/api/')
-			.then((response) => response.json())
-			.then((data) => {
-				let people = data.results;
-				self.trigger(people[0]);
-			})
-			.catch((err) => {err});
+		this.socket = io('http://react-cf.app:3000');
+		this.socket.on('people', (people) => {
+			var people = JSON.parse(people);
+			people = people.results[0]
+			this.trigger(people)
+		});
+	},
+	askForPeople: function() {
+		this.socket.emit('ask');
 	}
 });
 

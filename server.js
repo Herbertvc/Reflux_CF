@@ -6,6 +6,35 @@ const WebpackDevServer = require('webpack-dev-server');
 const config = require('./webpack.config');
 const open = require('open');
 
+// Server
+
+const express = require('express');
+const http = require('http');
+const engine = require('socket.io');
+
+const request = require('request');
+
+const port = 3000;
+const app = express();
+
+let server = app.listen(port);
+
+const io = engine.listen(server);
+
+io.on('connection', (socket) => {
+	request('https://randomuser.me/api/', (err,response, body) => {
+		io.emit('people',body);
+	})
+
+	socket.on('ask',(ask) => {
+		request('https://randomuser.me/api/', (err,response, body) => {
+			io.emit('people',body);
+		})
+	})
+});
+
+// Server end
+
 new WebpackDevServer(webpack(config), config.devServer)
 .listen(config.port, '0.0.0.0', (err) => {
   if (err) {
